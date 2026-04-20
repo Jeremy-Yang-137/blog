@@ -25,3 +25,21 @@ hugo和hexo的原理一样，都是把静态站点生成到./public里。
 调整字体：新建一个assets/css/extended/custom.css，用!important强制覆盖原来的样式。
 
 在hugo.yaml中自定义站点标题、导航栏、是否显示词数统计等。
+
+## 部署到Github Pages
+
+### 方法一：只上传public文件夹
+
+在public里init git，然后每次构建后直接将public里的所有文件推送到`jeremy-yang-137.github.io`仓库里。
+
+但是，遇到了哈希值不匹配导致css文件无法加载的问题。没成功解决，于是采用了方法二。
+
+### 方法二：上传整个项目
+
+GitHub上新建一个仓库`blog`，将整个hyhome文件夹推送上去（要在.gitmodules里配置themes/PaperMod为子模块）
+
+然后在.github/workflows/hugo.yaml里配置github actions
+
+每次推送更新时，会看到action在自动执行。
+
+这样生成的博客是通过`https://jeremy-yang-137.github.io/blog/`访问，而不是原先的`https://jeremy-yang-137.github.io`
