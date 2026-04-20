@@ -1,0 +1,193 @@
+/* OVERRIDE ALL */
+
+/* 代码块和内联代码文字 */
+
+pre code, code {
+    font-family: "Consolas", "Menlo", "SF Mono", "Noto Sans SC", monospace;
+    color: rgb(31, 31, 31) !important;
+}
+
+/* 各级字体大小 */
+
+h1 {
+    font-size: 32px !important;
+}
+
+h2 {
+    font-size: 26px !important;
+}
+
+h3 {
+    font-size: 22px !important;
+}
+
+p, li {
+    font-size: 16px !important;
+}
+
+/* 主页和归档页面背景渐变 */
+
+.list {
+    /* background: linear-gradient(rgb(174, 210, 246), rgb(245, 245, 245) 500px); */ /* rgb(245, 242, 231) 淡黄 */
+    background-color: rgb(245, 245, 245);
+}
+
+/* 文章页面背景（灰色），以及代码/代码块背景（略暗） */
+
+:root {
+    --theme: rgb(245, 245, 245);
+    --code-bg: rgb(230, 230, 230);
+    --code-block-bg: rgb(230, 230, 230);
+}
+
+/* 代码块配色，由原来的深色改为浅色 */
+
+/* Background - 改为浅色背景 */
+.bg { color: #2d3748; background-color: #e6e6e6; }
+/* PreWrapper - 改为浅色背景 */
+.chroma { color: #2d3748; background-color: #e6e6e6; }
+/* Error - 改为深红色 */
+.chroma .err { color: #c53030 }
+/* LineLink */ .chroma .lnlinks { outline: none; text-decoration: none; color: inherit }
+/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+/* LineHighlight - 改为浅黄色高亮 */
+.chroma .hl { background-color: #fefcbf }
+/* LineNumbersTable - 改为深灰色 */
+.chroma .lnt { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #718096 }
+/* LineNumbers - 改为深灰色 */
+.chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #718096 }
+/* Line */ .chroma .line { display: flex; }
+/* Keyword - 改为深紫色 */
+.chroma .k { color: #805ad5 }
+/* KeywordConstant - 改为深橙色 */
+.chroma .kc { color: #d69e2e }
+/* KeywordDeclaration - 改为深红色 */
+.chroma .kd { color: #c53030 }
+/* KeywordNamespace - 改为深青色 */
+.chroma .kn { color: #319795 }
+/* KeywordPseudo - 改为深紫色 */
+.chroma .kp { color: #805ad5 }
+/* KeywordReserved - 改为深紫色 */
+.chroma .kr { color: #805ad5 }
+/* KeywordType - 改为深红色 */
+.chroma .kt { color: #c53030 }
+/* NameAttribute - 改为深蓝色 */
+.chroma .na { color: #3182ce }
+/* NameBuiltin - 改为深青色 */
+.chroma .nb { color: #319795 }
+/* NameBuiltinPseudo - 改为深青色 */
+.chroma .bp { color: #319795 }
+/* NameClass - 改为深黄色 */
+.chroma .nc { color: #b7791f }
+/* NameConstant - 改为深黄色 */
+.chroma .no { color: #b7791f }
+/* NameDecorator - 改为深蓝色加粗 */
+.chroma .nd { color: #3182ce; font-weight: bold }
+/* NameEntity - 改为深青色 */
+.chroma .ni { color: #319795 }
+/* NameException - 改为深橙色 */
+.chroma .ne { color: #d69e2e }
+/* NameFunction - 改为深蓝色 */
+.chroma .nf { color: #3182ce }
+/* NameFunctionMagic - 改为深蓝色 */
+.chroma .fm { color: #3182ce }
+/* NameLabel - 改为深青色 */
+.chroma .nl { color: #319795 }
+/* NameNamespace - 改为深橙色 */
+.chroma .nn { color: #d69e2e }
+/* NameProperty - 改为深橙色 */
+.chroma .py { color: #d69e2e }
+/* NameTag - 改为深紫色 */
+.chroma .nt { color: #805ad5 }
+/* NameVariable - 改为深粉色 */
+.chroma .nv { color: #d53f8c }
+/* NameVariableClass - 改为深粉色 */
+.chroma .vc { color: #d53f8c }
+/* NameVariableGlobal - 改为深粉色 */
+.chroma .vg { color: #d53f8c }
+/* NameVariableInstance - 改为深粉色 */
+.chroma .vi { color: #d53f8c }
+/* NameVariableMagic - 改为深粉色 */
+.chroma .vm { color: #d53f8c }
+/* LiteralString - 改为深绿色 */
+.chroma .s { color: #38a169 }
+/* LiteralStringAffix - 改为深红色 */
+.chroma .sa { color: #c53030 }
+/* LiteralStringBacktick - 改为深绿色 */
+.chroma .sb { color: #38a169 }
+/* LiteralStringChar - 改为深绿色 */
+.chroma .sc { color: #38a169 }
+/* LiteralStringDelimiter - 改为深蓝色 */
+.chroma .dl { color: #3182ce }
+/* LiteralStringDoc - 改为深灰色 */
+.chroma .sd { color: #718096 }
+/* LiteralStringDouble - 改为深绿色 */
+.chroma .s2 { color: #38a169 }
+/* LiteralStringEscape - 改为深蓝色 */
+.chroma .se { color: #3182ce }
+/* LiteralStringHeredoc - 改为深灰色 */
+.chroma .sh { color: #718096 }
+/* LiteralStringInterpol - 改为深绿色 */
+.chroma .si { color: #38a169 }
+/* LiteralStringOther - 改为深绿色 */
+.chroma .sx { color: #38a169 }
+/* LiteralStringRegex - 改为深青色 */
+.chroma .sr { color: #319795 }
+/* LiteralStringSingle - 改为深绿色 */
+.chroma .s1 { color: #38a169 }
+/* LiteralStringSymbol - 改为深绿色 */
+.chroma .ss { color: #38a169 }
+/* LiteralNumber - 改为深橙色 */
+.chroma .m { color: #d69e2e }
+/* LiteralNumberBin - 改为深橙色 */
+.chroma .mb { color: #d69e2e }
+/* LiteralNumberFloat - 改为深橙色 */
+.chroma .mf { color: #d69e2e }
+/* LiteralNumberHex - 改为深橙色 */
+.chroma .mh { color: #d69e2e }
+/* LiteralNumberInteger - 改为深橙色 */
+.chroma .mi { color: #d69e2e }
+/* LiteralNumberIntegerLong - 改为深橙色 */
+.chroma .il { color: #d69e2e }
+/* LiteralNumberOct - 改为深橙色 */
+.chroma .mo { color: #d69e2e }
+/* Operator - 改为深青色加粗 */
+.chroma .o { color: #319795; font-weight: bold }
+/* OperatorWord - 改为深青色加粗 */
+.chroma .ow { color: #319795; font-weight: bold }
+/* Comment - 改为深灰色斜体 */
+.chroma .c { color: #718096; font-style: italic }
+/* CommentHashbang - 改为深灰色斜体 */
+.chroma .ch { color: #718096; font-style: italic }
+/* CommentMultiline - 改为深灰色斜体 */
+.chroma .cm { color: #718096; font-style: italic }
+/* CommentSingle - 改为深灰色斜体 */
+.chroma .c1 { color: #718096; font-style: italic }
+/* CommentSpecial - 改为深灰色斜体 */
+.chroma .cs { color: #718096; font-style: italic }
+/* CommentPreproc - 改为深灰色斜体 */
+.chroma .cp { color: #718096; font-style: italic }
+/* CommentPreprocFile - 改为深灰色加粗斜体 */
+.chroma .cpf { color: #718096; font-weight: bold; font-style: italic }
+/* GenericDeleted - 改为深红色配浅红色背景 */
+.chroma .gd { color: #c53030; background-color: #fed7d7 }
+/* GenericEmph */ .chroma .ge { font-style: italic }
+/* GenericError - 改为深红色 */
+.chroma .gr { color: #c53030 }
+/* GenericHeading - 改为深橙色加粗 */
+.chroma .gh { color: #d69e2e; font-weight: bold }
+/* GenericInserted - 改为深绿色配浅绿色背景 */
+.chroma .gi { color: #38a169; background-color: #c6f6d5 }
+/* GenericStrong */ .chroma .gs { font-weight: bold }
+/* GenericSubheading - 改为深橙色加粗 */
+.chroma .gu { color: #d69e2e; font-weight: bold }
+/* GenericTraceback - 改为深红色 */
+.chroma .gt { color: #c53030 }
+/* GenericUnderline */ .chroma .gl { text-decoration: underline }
+
+/* 正文下方的空间 */
+
+.post-footer {
+    margin-top: 200px;
+}

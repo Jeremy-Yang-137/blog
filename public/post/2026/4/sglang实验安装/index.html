@@ -1,0 +1,135 @@
+<!doctype html><html lang=en dir=auto data-theme=light><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>SGLang实验安装 | HY Home</title><meta name=keywords content><meta name=description content="尝试过在wsl中安装vLLM失败后，便转向安装SGlang。
+第一步：在wsl中新建一个conda环境
+第二部：下载SGLang源码
+第三步：将sglang安装到环境里
+pip install -e &#34;python[all]&#34;
+第一次运行需要下载很多依赖项，不过过程一切顺利。
+第四步：
+启动服务器。最初计划是使用Qwen3.5-4B：
+python -m sglang.launch_server \
+  --model-path Qwen/Qwen3.5-4B \
+  --port 8000 \
+  --tp-size 1 \
+  --mem-fraction-static 0.85 \
+  --context-length 32768 \
+  --reasoning-parser qwen3
+要把整个模型文件（8G左右）下载到本地，需要一点时间。
+（模型文件下载到了~./cache/huggingface/hub里面）
+下载完开始运行，然后就喜闻乐见地爆显存了。解决办法是换成Qwen3.5-2B，并调整一下参数（AI给的）
+python -m sglang.launch_server \
+  --model-path Qwen/Qwen3.5-2B \
+  --tp-size 1 \
+  --mem-fraction-static 0.70 \
+  --context-length 4096 \
+  --chunked-prefill-size 2048 \
+  --max-running-requests 1 \
+  --cuda-graph-max-bs 4 \
+  --dtype bfloat16
+最后遇到的一个问题，还是跟那块RTX5060（万恶之源）有关。以下是两种报错：
+Exception: Capture cuda graph failed: FlashInfer requires GPUs with sm75 or higher
+nvcc fatal   : Unsupported gpu architecture 'compute_120'
+根本原因是，RTX5060太新了，要使用CUDA13.1+版本；而不知为何我的wsl里装的是CUDA12.4版本，导致各个软件都认不出新的硬件。"><meta name=author content="HY"><link rel=canonical href=http://localhost:1313/post/2026/4/sglang%E5%AE%9E%E9%AA%8C%E5%AE%89%E8%A3%85/><link crossorigin=anonymous href=/assets/css/stylesheet.bf61b680fe8f6a0337960cb0dd74c7c05c476debcf0e5a904c9ffff935a6d013.css integrity="sha256-v2G2gP6PagM3lgyw3XTHwFxHbevPDlqQTJ//+TWm0BM=" rel="preload stylesheet" as=style><link rel=icon href=http://localhost:1313/%3Clink%20/%20abs%20url%3E><link rel=icon type=image/png sizes=16x16 href=http://localhost:1313/%3Clink%20/%20abs%20url%3E><link rel=icon type=image/png sizes=32x32 href=http://localhost:1313/%3Clink%20/%20abs%20url%3E><link rel=apple-touch-icon href=http://localhost:1313/%3Clink%20/%20abs%20url%3E><link rel=mask-icon href=http://localhost:1313/%3Clink%20/%20abs%20url%3E><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=http://localhost:1313/post/2026/4/sglang%E5%AE%9E%E9%AA%8C%E5%AE%89%E8%A3%85/><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:url" content="http://localhost:1313/post/2026/4/sglang%E5%AE%9E%E9%AA%8C%E5%AE%89%E8%A3%85/"><meta property="og:site_name" content="HY Home"><meta property="og:title" content="SGLang实验安装"><meta property="og:description" content="尝试过在wsl中安装vLLM失败后，便转向安装SGlang。
+第一步：在wsl中新建一个conda环境
+第二部：下载SGLang源码
+第三步：将sglang安装到环境里
+pip install -e &#34;python[all]&#34; 第一次运行需要下载很多依赖项，不过过程一切顺利。
+第四步：
+启动服务器。最初计划是使用Qwen3.5-4B：
+python -m sglang.launch_server \ --model-path Qwen/Qwen3.5-4B \ --port 8000 \ --tp-size 1 \ --mem-fraction-static 0.85 \ --context-length 32768 \ --reasoning-parser qwen3 要把整个模型文件（8G左右）下载到本地，需要一点时间。
+（模型文件下载到了~./cache/huggingface/hub里面）
+下载完开始运行，然后就喜闻乐见地爆显存了。解决办法是换成Qwen3.5-2B，并调整一下参数（AI给的）
+python -m sglang.launch_server \ --model-path Qwen/Qwen3.5-2B \ --tp-size 1 \ --mem-fraction-static 0.70 \ --context-length 4096 \ --chunked-prefill-size 2048 \ --max-running-requests 1 \ --cuda-graph-max-bs 4 \ --dtype bfloat16 最后遇到的一个问题，还是跟那块RTX5060（万恶之源）有关。以下是两种报错：
+Exception: Capture cuda graph failed: FlashInfer requires GPUs with sm75 or higher nvcc fatal : Unsupported gpu architecture 'compute_120' 根本原因是，RTX5060太新了，要使用CUDA13.1+版本；而不知为何我的wsl里装的是CUDA12.4版本，导致各个软件都认不出新的硬件。"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2026-04-04T14:06:34+08:00"><meta property="article:modified_time" content="2026-04-04T14:06:34+08:00"><meta property="og:image" content="http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta name=twitter:title content="SGLang实验安装"><meta name=twitter:description content="尝试过在wsl中安装vLLM失败后，便转向安装SGlang。
+第一步：在wsl中新建一个conda环境
+第二部：下载SGLang源码
+第三步：将sglang安装到环境里
+pip install -e &#34;python[all]&#34; 第一次运行需要下载很多依赖项，不过过程一切顺利。
+第四步：
+启动服务器。最初计划是使用Qwen3.5-4B：
+python -m sglang.launch_server \ --model-path Qwen/Qwen3.5-4B \ --port 8000 \ --tp-size 1 \ --mem-fraction-static 0.85 \ --context-length 32768 \ --reasoning-parser qwen3 要把整个模型文件（8G左右）下载到本地，需要一点时间。
+（模型文件下载到了~./cache/huggingface/hub里面）
+下载完开始运行，然后就喜闻乐见地爆显存了。解决办法是换成Qwen3.5-2B，并调整一下参数（AI给的）
+python -m sglang.launch_server \ --model-path Qwen/Qwen3.5-2B \ --tp-size 1 \ --mem-fraction-static 0.70 \ --context-length 4096 \ --chunked-prefill-size 2048 \ --max-running-requests 1 \ --cuda-graph-max-bs 4 \ --dtype bfloat16 最后遇到的一个问题，还是跟那块RTX5060（万恶之源）有关。以下是两种报错：
+Exception: Capture cuda graph failed: FlashInfer requires GPUs with sm75 or higher nvcc fatal : Unsupported gpu architecture 'compute_120' 根本原因是，RTX5060太新了，要使用CUDA13.1+版本；而不知为何我的wsl里装的是CUDA12.4版本，导致各个软件都认不出新的硬件。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"http://localhost:1313/post/"},{"@type":"ListItem","position":2,"name":"SGLang实验安装","item":"http://localhost:1313/post/2026/4/sglang%E5%AE%9E%E9%AA%8C%E5%AE%89%E8%A3%85/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"SGLang实验安装","name":"SGLang实验安装","description":"尝试过在wsl中安装vLLM失败后，便转向安装SGlang。\n第一步：在wsl中新建一个conda环境\n第二部：下载SGLang源码\n第三步：将sglang安装到环境里\npip install -e \u0026#34;python[all]\u0026#34; 第一次运行需要下载很多依赖项，不过过程一切顺利。\n第四步：\n启动服务器。最初计划是使用Qwen3.5-4B：\npython -m sglang.launch_server \\ --model-path Qwen/Qwen3.5-4B \\ --port 8000 \\ --tp-size 1 \\ --mem-fraction-static 0.85 \\ --context-length 32768 \\ --reasoning-parser qwen3 要把整个模型文件（8G左右）下载到本地，需要一点时间。\n（模型文件下载到了~./cache/huggingface/hub里面）\n下载完开始运行，然后就喜闻乐见地爆显存了。解决办法是换成Qwen3.5-2B，并调整一下参数（AI给的）\npython -m sglang.launch_server \\ --model-path Qwen/Qwen3.5-2B \\ --tp-size 1 \\ --mem-fraction-static 0.70 \\ --context-length 4096 \\ --chunked-prefill-size 2048 \\ --max-running-requests 1 \\ --cuda-graph-max-bs 4 \\ --dtype bfloat16 最后遇到的一个问题，还是跟那块RTX5060（万恶之源）有关。以下是两种报错：\nException: Capture cuda graph failed: FlashInfer requires GPUs with sm75 or higher nvcc fatal : Unsupported gpu architecture \u0026#39;compute_120\u0026#39; 根本原因是，RTX5060太新了，要使用CUDA13.1+版本；而不知为何我的wsl里装的是CUDA12.4版本，导致各个软件都认不出新的硬件。\n","keywords":[],"articleBody":"尝试过在wsl中安装vLLM失败后，便转向安装SGlang。\n第一步：在wsl中新建一个conda环境\n第二部：下载SGLang源码\n第三步：将sglang安装到环境里\npip install -e \"python[all]\" 第一次运行需要下载很多依赖项，不过过程一切顺利。\n第四步：\n启动服务器。最初计划是使用Qwen3.5-4B：\npython -m sglang.launch_server \\ --model-path Qwen/Qwen3.5-4B \\ --port 8000 \\ --tp-size 1 \\ --mem-fraction-static 0.85 \\ --context-length 32768 \\ --reasoning-parser qwen3 要把整个模型文件（8G左右）下载到本地，需要一点时间。\n（模型文件下载到了~./cache/huggingface/hub里面）\n下载完开始运行，然后就喜闻乐见地爆显存了。解决办法是换成Qwen3.5-2B，并调整一下参数（AI给的）\npython -m sglang.launch_server \\ --model-path Qwen/Qwen3.5-2B \\ --tp-size 1 \\ --mem-fraction-static 0.70 \\ --context-length 4096 \\ --chunked-prefill-size 2048 \\ --max-running-requests 1 \\ --cuda-graph-max-bs 4 \\ --dtype bfloat16 最后遇到的一个问题，还是跟那块RTX5060（万恶之源）有关。以下是两种报错：\nException: Capture cuda graph failed: FlashInfer requires GPUs with sm75 or higher nvcc fatal : Unsupported gpu architecture 'compute_120' 根本原因是，RTX5060太新了，要使用CUDA13.1+版本；而不知为何我的wsl里装的是CUDA12.4版本，导致各个软件都认不出新的硬件。\n解决方法是：从NVIDIA官网安装cuda-toolkit13.1：\nwget https://developer.download.nvidia.com/compute/cuda/13.1.0/local_installers/cuda_13.1.0_590.44.01_linux.run sudo sh cuda_13.1.0_590.44.01_linux.run 并在.bashrc末尾设置一下环境变量就好了。\n最终的执行指令 先设置一下HF Mirror（不知为何使用本地模型也要联网验证）：\nexport HF_ENDPOINT=https://hf-mirror.com 1. 开启服务器（跟上面那个一样）：\npython -m sglang.launch_server \\ --model-path Qwen/Qwen3.5-2B \\ --tp-size 1 \\ --mem-fraction-static 0.70 \\ --context-length 4096 \\ --chunked-prefill-size 2048 \\ --max-running-requests 1 \\ --cuda-graph-max-bs 4 \\ --dtype bfloat16 其中附加参数的意思：\n--tp-size 1 张量并行大小为 1，表示不使用张量并行（单 GPU 运行） --mem-fraction-static 0.70 静态内存分配比例为 70%，预留 30% 内存用于动态分配 --context-length 4096 模型支持的最大上下文长度为 4096 tokens --chunked-prefill-size 2048 分块预填充大小为 2048，将长输入分块处理以降低延迟 --max-running-requests 1 最大并发运行请求数为 1，同时只处理一个请求（单用户模式） --cuda-graph-max-bs 4 CUDA Graph 最大批处理大小为 4，用于优化小批量推理性能 --dtype bfloat16 模型权重和计算的数据类型为 bfloat16 更多服务器参数：https://docs.sglang.com.cn/advanced_features/server_arguments.html\n执行后，会输出一大堆内容。最后能够看到这段令人愉悦的消息：\n[2026-04-04 23:16:25] INFO: Started server process [10986] [2026-04-04 23:16:25] INFO: Waiting for application startup. [2026-04-04 23:16:25] INFO: Application startup complete. [2026-04-04 23:16:25] INFO: Uvicorn running on http://127.0.0.1:30000 (Press CTRL+C to quit) [2026-04-04 23:16:26] INFO: 127.0.0.1:45298 - \"GET /model_info HTTP/1.1\" 200 OK [2026-04-04 23:16:38] Prefill batch, #new-seq: 1, #new-token: 82, #cached-token: 0, full token usage: 0.00, mamba usage: 0.15, #running-req: 0, #queue-req: 0, cuda graph: False, input throughput (token/s): 0.00 [2026-04-04 23:16:38] INFO: 127.0.0.1:45302 - \"POST /v1/chat/completions HTTP/1.1\" 200 OK [2026-04-04 23:16:38] The server is fired up and ready to roll! VS Code 右下角会弹窗提示“Your application running on port 30000 is available.”\n2. 执行推理\n可以直接在另一个控制台发送请求：\ncurl http://127.0.0.1:30000/v1/chat/completions \\ -H \"Content-Type: application/json\" \\ -d '{ \"model\": \"default\", \"messages\": [ {\"role\": \"user\", \"content\": \"who are you?\"} ], \"temperature\": 0.7, \"max_tokens\": 512 }' 也可以通过python程序，使用OpenAI API：\nfrom openai import OpenAI client = OpenAI( base_url=\"http://127.0.0.1:30000/v1\", api_key=\"None\" # SGLang 不需要真实 API key ) response = client.chat.completions.create( model=\"None\", # 模型名称，如果启动sglang时指定了模型，就会无视该字段 messages=[ {\"role\": \"user\", \"content\": \"who are you?\"} ], temperature=0.7, max_tokens=512 ) print(response.choices[0].message.content) 参考 启动服务/发送请求的更多方法：https://docs.sglang.com.cn/basic_usage/send_request.html\n","wordCount":"327","inLanguage":"en","image":"http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E","datePublished":"2026-04-04T14:06:34+08:00","dateModified":"2026-04-04T14:06:34+08:00","author":{"@type":"Person","name":"HY"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:1313/post/2026/4/sglang%E5%AE%9E%E9%AA%8C%E5%AE%89%E8%A3%85/"},"publisher":{"@type":"Organization","name":"HY Home","logo":{"@type":"ImageObject","url":"http://localhost:1313/%3Clink%20/%20abs%20url%3E"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=http://localhost:1313/ accesskey=h title="HY Home (Alt + H)"><img src=http://localhost:1313/apple-touch-icon.png alt aria-label=logo height=35>HY Home</a></div><ul id=menu class=menu><li><a href=http://localhost:1313/archives/ title=Archive><span>Archive</span></a></li><li><a href=http://localhost:1313/about/ title=About><span>About</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=http://localhost:1313/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=http://localhost:1313/post/>Posts</a></nav><h1 class="post-title entry-hint-parent">SGLang实验安装</h1><div class=post-meta><span title='2026-04-04 14:06:34 +0800 CST'>April 4, 2026</span>&nbsp;·&nbsp;<span>HY</span></div></header><div class="post-content md-content"><p>尝试过在wsl中安装vLLM失败后，便转向安装SGlang。</p><p>第一步：在wsl中新建一个conda环境</p><p>第二部：下载SGLang源码</p><p>第三步：将sglang安装到环境里</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>pip install -e <span class=s2>&#34;python[all]&#34;</span>
+</span></span></code></pre></div><p>第一次运行需要下载很多依赖项，不过过程一切顺利。</p><p>第四步：</p><p>启动服务器。最初计划是使用Qwen3.5-4B：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>python -m sglang.launch_server <span class=se>\
+</span></span></span><span class=line><span class=cl>  --model-path Qwen/Qwen3.5-4B <span class=se>\
+</span></span></span><span class=line><span class=cl>  --port <span class=m>8000</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --tp-size <span class=m>1</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --mem-fraction-static 0.85 <span class=se>\
+</span></span></span><span class=line><span class=cl>  --context-length <span class=m>32768</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --reasoning-parser qwen3
+</span></span></code></pre></div><p>要把整个模型文件（8G左右）下载到本地，需要一点时间。</p><p>（模型文件下载到了~./cache/huggingface/hub里面）</p><p>下载完开始运行，然后就喜闻乐见地爆显存了。解决办法是换成Qwen3.5-2B，并调整一下参数（AI给的）</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>python -m sglang.launch_server <span class=se>\
+</span></span></span><span class=line><span class=cl>  --model-path Qwen/Qwen3.5-2B <span class=se>\
+</span></span></span><span class=line><span class=cl>  --tp-size <span class=m>1</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --mem-fraction-static 0.70 <span class=se>\
+</span></span></span><span class=line><span class=cl>  --context-length <span class=m>4096</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --chunked-prefill-size <span class=m>2048</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --max-running-requests <span class=m>1</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --cuda-graph-max-bs <span class=m>4</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --dtype bfloat16
+</span></span></code></pre></div><p>最后遇到的一个问题，还是跟那块RTX5060（万恶之源）有关。以下是两种报错：</p><pre tabindex=0><code>Exception: Capture cuda graph failed: FlashInfer requires GPUs with sm75 or higher
+nvcc fatal   : Unsupported gpu architecture &#39;compute_120&#39;
+</code></pre><p>根本原因是，RTX5060太新了，要使用CUDA13.1+版本；而不知为何我的wsl里装的是CUDA12.4版本，导致各个软件都认不出新的硬件。</p><p>解决方法是：从NVIDIA官网安装cuda-toolkit13.1：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>wget https://developer.download.nvidia.com/compute/cuda/13.1.0/local_installers/cuda_13.1.0_590.44.01_linux.run
+</span></span><span class=line><span class=cl>sudo sh cuda_13.1.0_590.44.01_linux.run
+</span></span></code></pre></div><p>并在.bashrc末尾设置一下环境变量就好了。</p><h2 id=最终的执行指令>最终的执行指令<a hidden class=anchor aria-hidden=true href=#最终的执行指令>#</a></h2><p>先设置一下HF Mirror（不知为何使用本地模型也要联网验证）：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>export</span> <span class=nv>HF_ENDPOINT</span><span class=o>=</span>https://hf-mirror.com
+</span></span></code></pre></div><p><strong>1. 开启服务器（跟上面那个一样）：</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>python -m sglang.launch_server <span class=se>\
+</span></span></span><span class=line><span class=cl>  --model-path Qwen/Qwen3.5-2B <span class=se>\
+</span></span></span><span class=line><span class=cl>  --tp-size <span class=m>1</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --mem-fraction-static 0.70 <span class=se>\
+</span></span></span><span class=line><span class=cl>  --context-length <span class=m>4096</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --chunked-prefill-size <span class=m>2048</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --max-running-requests <span class=m>1</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --cuda-graph-max-bs <span class=m>4</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  --dtype bfloat16
+</span></span></code></pre></div><p>其中附加参数的意思：</p><pre tabindex=0><code>--tp-size 1                   张量并行大小为 1，表示不使用张量并行（单 GPU 运行）
+--mem-fraction-static 0.70    静态内存分配比例为 70%，预留 30% 内存用于动态分配
+--context-length 4096         模型支持的最大上下文长度为 4096 tokens
+--chunked-prefill-size 2048   分块预填充大小为 2048，将长输入分块处理以降低延迟
+--max-running-requests 1      最大并发运行请求数为 1，同时只处理一个请求（单用户模式）
+--cuda-graph-max-bs 4         CUDA Graph 最大批处理大小为 4，用于优化小批量推理性能
+--dtype bfloat16              模型权重和计算的数据类型为 bfloat16
+</code></pre><p>更多服务器参数：<a href=https://docs.sglang.com.cn/advanced_features/server_arguments.html>https://docs.sglang.com.cn/advanced_features/server_arguments.html</a></p><p>执行后，会输出一大堆内容。最后能够看到这段令人愉悦的消息：</p><pre tabindex=0><code>[2026-04-04 23:16:25] INFO:     Started server process [10986]
+[2026-04-04 23:16:25] INFO:     Waiting for application startup.
+[2026-04-04 23:16:25] INFO:     Application startup complete.
+[2026-04-04 23:16:25] INFO:     Uvicorn running on http://127.0.0.1:30000 (Press CTRL+C to quit)
+[2026-04-04 23:16:26] INFO:     127.0.0.1:45298 - &#34;GET /model_info HTTP/1.1&#34; 200 OK
+[2026-04-04 23:16:38] Prefill batch, #new-seq: 1, #new-token: 82, #cached-token: 0, full token usage: 0.00, mamba usage: 0.15, #running-req: 0, #queue-req: 0, cuda graph: False, input throughput (token/s): 0.00
+[2026-04-04 23:16:38] INFO:     127.0.0.1:45302 - &#34;POST /v1/chat/completions HTTP/1.1&#34; 200 OK
+[2026-04-04 23:16:38] The server is fired up and ready to roll!
+</code></pre><p>VS Code 右下角会弹窗提示“Your application running on port 30000 is available.”</p><p><strong>2. 执行推理</strong></p><p>可以直接在另一个控制台发送请求：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>curl http://127.0.0.1:30000/v1/chat/completions <span class=se>\
+</span></span></span><span class=line><span class=cl>  -H <span class=s2>&#34;Content-Type: application/json&#34;</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>  -d <span class=s1>&#39;{
+</span></span></span><span class=line><span class=cl><span class=s1>    &#34;model&#34;: &#34;default&#34;,
+</span></span></span><span class=line><span class=cl><span class=s1>    &#34;messages&#34;: [
+</span></span></span><span class=line><span class=cl><span class=s1>      {&#34;role&#34;: &#34;user&#34;, &#34;content&#34;: &#34;who are you?&#34;}
+</span></span></span><span class=line><span class=cl><span class=s1>    ],
+</span></span></span><span class=line><span class=cl><span class=s1>    &#34;temperature&#34;: 0.7,
+</span></span></span><span class=line><span class=cl><span class=s1>    &#34;max_tokens&#34;: 512
+</span></span></span><span class=line><span class=cl><span class=s1>  }&#39;</span>
+</span></span></code></pre></div><p>也可以通过python程序，使用OpenAI API：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>openai</span> <span class=kn>import</span> <span class=n>OpenAI</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>client</span> <span class=o>=</span> <span class=n>OpenAI</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>base_url</span><span class=o>=</span><span class=s2>&#34;http://127.0.0.1:30000/v1&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>api_key</span><span class=o>=</span><span class=s2>&#34;None&#34;</span>  <span class=c1># SGLang 不需要真实 API key</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>response</span> <span class=o>=</span> <span class=n>client</span><span class=o>.</span><span class=n>chat</span><span class=o>.</span><span class=n>completions</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>=</span><span class=s2>&#34;None&#34;</span><span class=p>,</span>  <span class=c1># 模型名称，如果启动sglang时指定了模型，就会无视该字段</span>
+</span></span><span class=line><span class=cl>    <span class=n>messages</span><span class=o>=</span><span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;who are you?&#34;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=n>temperature</span><span class=o>=</span><span class=mf>0.7</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>max_tokens</span><span class=o>=</span><span class=mi>512</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>response</span><span class=o>.</span><span class=n>choices</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>message</span><span class=o>.</span><span class=n>content</span><span class=p>)</span>
+</span></span></code></pre></div><h2 id=参考>参考<a hidden class=anchor aria-hidden=true href=#参考>#</a></h2><p>启动服务/发送请求的更多方法：<a href=https://docs.sglang.com.cn/basic_usage/send_request.html>https://docs.sglang.com.cn/basic_usage/send_request.html</a></p></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=http://localhost:1313/post/2026/4/%E9%85%8D%E7%BD%AEhexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/><span class=title>« Prev</span>
+<span>配置hexo个人博客</span>
+</a><a class=next href=http://localhost:1313/post/2026/4/vllm%E5%AE%9E%E9%AA%8C%E5%AE%89%E8%A3%85/><span class=title>Next »</span>
+<span>vLLM实验安装</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=http://localhost:1313/>HY Home</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script></body></html>
